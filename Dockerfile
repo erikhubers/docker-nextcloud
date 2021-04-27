@@ -1,4 +1,4 @@
-FROM nextcloud:${IMAGE_PREFIX}fpm-alpine
+FROM nextcloud:fpm-alpine
 
 # Install DLib for face recognition
 RUN apk add -X http://dl-cdn.alpinelinux.org/alpine/edge/testing dlib
