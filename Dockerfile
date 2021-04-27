@@ -61,6 +61,9 @@ FROM nextcloud:fpm
 RUN apt-get update ; \
     apt-get install -y libopenblas-base
 
+RUN apt-get install -y libbz2-dev
+RUN docker-php-ext-install bz2
+
 # Install dlib and PDlib to image
 
 COPY --from=builder /usr/local/lib/libdlib.so* /usr/local/lib/
