@@ -56,8 +56,9 @@ RUN git clone https://github.com/matiasdelellis/pdlib-min-test-suite.git \
 
 FROM nextcloud:fpm
 
-# Install dependencies to image
+ENV MEMORY_LIMIT=2G
 
+# Install dependencies to image
 RUN apt-get update ; \
     apt-get install -y libopenblas-base nano cron
 
@@ -99,8 +100,6 @@ RUN apt-get install -y wget unzip nodejs npm
 #   && mv facerecognition-*  /usr/src/nextcloud/facerecognition \
 #   && cd /usr/src/nextcloud/facerecognition \
 #   && make
-
-ENV MEMORY_LIMIT=2G
 
 # Pre generate NextCloud Thumbnails. Source: https://www.c-rieger.de/preview-generator-previews-jumping-up-as-popcorn/
 RUN echo '@hourly php -f /var/www/html/occ preview:pre-generate' >> /var/spool/cron/crontabs/www-data
