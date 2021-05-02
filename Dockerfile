@@ -76,7 +76,7 @@ COPY --from=builder /usr/local/lib/php/extensions/no-debug-non-zts-20190902/pdli
 
 RUN echo "extension=pdlib.so" > /usr/local/etc/php/conf.d/pdlib.ini
 
-# Increse memory limits
+# Increase memory limits
 
 RUN echo memory_limit=2G > /usr/local/etc/php/conf.d/memory-limit.ini
 
@@ -94,8 +94,8 @@ RUN echo memory_limit=2G > /usr/local/etc/php/conf.d/memory-limit.ini
 #
 ARG FR_BRANCH=master
 RUN apt-get install -y wget unzip nodejs npm
-RUN wget -c -q -O facerecognition https://github.com/matiasdelellis/facerecognition/archive/$FR_BRANCH.zip \
-  && unzip facerecognition \
-  && mv facerecognition-*  /usr/src/nextcloud/facerecognition \
-  && cd /usr/src/nextcloud/facerecognition \
-  && make
+# RUN wget -c -q -O facerecognition https://github.com/matiasdelellis/facerecognition/archive/$FR_BRANCH.zip \
+#   && unzip facerecognition \
+#   && mv facerecognition-*  /usr/src/nextcloud/facerecognition \
+#   && cd /usr/src/nextcloud/facerecognition \
+#   && make
