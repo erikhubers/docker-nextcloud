@@ -6,7 +6,7 @@ FROM nextcloud:fpm as builder
 # Build and install dlib on builder
 
 RUN apt-get update ; \
-    apt-get install -y build-essential wget cmake libx11-dev libopenblas-dev nano cron
+    apt-get install -y build-essential wget cmake libx11-dev libopenblas-dev
 
 ARG DLIB_BRANCH=v19.19
 RUN wget -c -q https://github.com/davisking/dlib/archive/$DLIB_BRANCH.tar.gz \
@@ -59,7 +59,7 @@ FROM nextcloud:fpm
 # Install dependencies to image
 
 RUN apt-get update ; \
-    apt-get install -y libopenblas-base
+    apt-get install -y libopenblas-base nano cron
 
 RUN apt-get install -y libbz2-dev libmagickcore-6.q16-6-extra
 RUN docker-php-ext-install bz2
