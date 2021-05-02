@@ -56,10 +56,11 @@ RUN git clone https://github.com/matiasdelellis/pdlib-min-test-suite.git \
 
 FROM nextcloud:fpm
 
-# Install dependencies to image
+ENV MEMORY_LIMIT=2G
 
+# Install dependencies to image
 RUN apt-get update ; \
-    apt-get install -y libopenblas-base nano cron
+    apt-get install -y libopenblas-base nano supervisor tail
 
 RUN apt-get install -y libbz2-dev libmagickcore-6.q16-6-extra
 RUN docker-php-ext-install bz2
@@ -100,10 +101,17 @@ RUN apt-get install -y wget unzip nodejs npm
 #   && cd /usr/src/nextcloud/facerecognition \
 #   && make
 
-ENV MEMORY_LIMIT=2G
+# Configure the crons
+RUN mkdir -p \
+    /var/log/supervisord \
+    /var/run/supervisord \
+;
+
+COPY supervisord.conf /
 
 # Pre generate NextCloud Thumbnails. Source: https://www.c-rieger.de/preview-generator-previews-jumping-up-as-popcorn/
 RUN echo '@hourly php -f /var/www/html/occ preview:pre-generate' >> /var/spool/cron/crontabs/www-data
 
 #Run NextCloud Cronjob. Source: https://www.c-rieger.de/preview-generator-previews-jumping-up-as-popcorn/
 RUN echo '@hourly php -f /var/www/html/occ face:background_job -t 900000' >> /var/spool/cron/crontabs/www-data
+CMD ["/usr/bin/supervisord", "-c", "/supervisord.conf"]
