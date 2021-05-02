@@ -60,7 +60,7 @@ ENV MEMORY_LIMIT=2G
 
 # Install dependencies to image
 RUN apt-get update ; \
-    apt-get install -y libopenblas-base nano supervisor tail
+    apt-get install -y libopenblas-base nano supervisor
 
 RUN apt-get install -y libbz2-dev libmagickcore-6.q16-6-extra
 RUN docker-php-ext-install bz2
