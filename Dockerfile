@@ -78,7 +78,7 @@ RUN echo "extension=pdlib.so" > /usr/local/etc/php/conf.d/pdlib.ini
 
 # Increase memory limits
 
-RUN echo memory_limit=2G > /usr/local/etc/php/conf.d/memory-limit.ini
+RUN echo 'memory_limit=${MEMORY_LIMIT}' > /usr/local/etc/php/conf.d/memory-limit.ini
 
 # Pdlib is already installed, now without all build dependencies.
 # You could test again if everything is correct, uncommenting the next lines
@@ -92,10 +92,18 @@ RUN echo memory_limit=2G > /usr/local/etc/php/conf.d/memory-limit.ini
 # At this point you meet all the dependencies to install the application
 # If is available you can skip this step and install the application from the application store
 #
-ARG FR_BRANCH=master
+#ARG FR_BRANCH=master
 RUN apt-get install -y wget unzip nodejs npm
 # RUN wget -c -q -O facerecognition https://github.com/matiasdelellis/facerecognition/archive/$FR_BRANCH.zip \
 #   && unzip facerecognition \
 #   && mv facerecognition-*  /usr/src/nextcloud/facerecognition \
 #   && cd /usr/src/nextcloud/facerecognition \
 #   && make
+
+ENV MEMORY_LIMIT=2G
+
+# Pre generate NextCloud Thumbnails. Source: https://www.c-rieger.de/preview-generator-previews-jumping-up-as-popcorn/
+RUN echo '@hourly php -f /var/www/html/occ preview:pre-generate' >> /var/spool/cron/crontabs/www-data
+
+#Run NextCloud Cronjob. Source: https://www.c-rieger.de/preview-generator-previews-jumping-up-as-popcorn/
+RUN echo '@hourly php -f /var/www/html/occ face:background_job -t 900000' >> /var/spool/cron/crontabs/www-data
