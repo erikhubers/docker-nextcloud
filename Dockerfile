@@ -110,7 +110,7 @@ RUN mkdir -p \
 
 COPY supervisord.conf /
 
-RUN echo user=${CRON_USER} >> /supervisord.conf
+RUN sed -i "2iuser=${CRON_USER}" /supervisord.conf
 
 # Pre generate NextCloud Thumbnails. Source: https://www.c-rieger.de/preview-generator-previews-jumping-up-as-popcorn/
 RUN echo '0 * * * * php -f /var/www/html/occ preview:pre-generate' >> /var/spool/cron/crontabs/www-data
