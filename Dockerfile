@@ -57,10 +57,11 @@ RUN git clone https://github.com/matiasdelellis/pdlib-min-test-suite.git \
 FROM nextcloud:fpm
 
 ENV MEMORY_LIMIT=2G
+ENV CRON_USER=www-data
 
 # Install dependencies to image
 RUN apt-get update ; \
-    apt-get install -y libopenblas-base nano supervisor tail
+    apt-get install -y libopenblas-base nano supervisor
 
 RUN apt-get install -y libbz2-dev libmagickcore-6.q16-6-extra
 RUN docker-php-ext-install bz2
@@ -79,7 +80,7 @@ RUN echo "extension=pdlib.so" > /usr/local/etc/php/conf.d/pdlib.ini
 
 # Increase memory limits
 
-RUN echo 'memory_limit=${MEMORY_LIMIT}' > /usr/local/etc/php/conf.d/memory-limit.ini
+RUN echo memory_limit=${MEMORY_LIMIT} > /usr/local/etc/php/conf.d/memory-limit.ini
 
 # Pdlib is already installed, now without all build dependencies.
 # You could test again if everything is correct, uncommenting the next lines
@@ -109,9 +110,11 @@ RUN mkdir -p \
 
 COPY supervisord.conf /
 
+RUN sed -i "2iuser=${CRON_USER}" /supervisord.conf
+
 # Pre generate NextCloud Thumbnails. Source: https://www.c-rieger.de/preview-generator-previews-jumping-up-as-popcorn/
-RUN echo '@hourly php -f /var/www/html/occ preview:pre-generate' >> /var/spool/cron/crontabs/www-data
+RUN echo '0 * * * * php -f /var/www/html/occ preview:pre-generate' >> /var/spool/cron/crontabs/www-data
 
 #Run NextCloud Cronjob. Source: https://www.c-rieger.de/preview-generator-previews-jumping-up-as-popcorn/
-RUN echo '@hourly php -f /var/www/html/occ face:background_job -t 900000' >> /var/spool/cron/crontabs/www-data
+RUN echo '0 * * * * php -f /var/www/html/occ face:background_job -t 900000' >> /var/spool/cron/crontabs/www-data
 CMD ["/usr/bin/supervisord", "-c", "/supervisord.conf"]
