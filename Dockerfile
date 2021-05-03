@@ -110,8 +110,8 @@ RUN mkdir -p \
 COPY supervisord.conf /
 
 # Pre generate NextCloud Thumbnails. Source: https://www.c-rieger.de/preview-generator-previews-jumping-up-as-popcorn/
-RUN echo '@hourly php -f /var/www/html/occ preview:pre-generate' >> /var/spool/cron/crontabs/www-data
+RUN echo '0 * * * * php -f /var/www/html/occ preview:pre-generate' >> /var/spool/cron/crontabs/www-data
 
 #Run NextCloud Cronjob. Source: https://www.c-rieger.de/preview-generator-previews-jumping-up-as-popcorn/
-RUN echo '@hourly php -f /var/www/html/occ face:background_job -t 900000' >> /var/spool/cron/crontabs/www-data
+RUN echo '0 * * * * php -f /var/www/html/occ face:background_job -t 900000' >> /var/spool/cron/crontabs/www-data
 CMD ["/usr/bin/supervisord", "-c", "/supervisord.conf"]
