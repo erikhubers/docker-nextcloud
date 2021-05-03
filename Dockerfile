@@ -57,6 +57,8 @@ RUN git clone https://github.com/matiasdelellis/pdlib-min-test-suite.git \
 FROM nextcloud:fpm
 
 ENV MEMORY_LIMIT=2G
+ENV PHP_MEMORY_LIMIT=2G
+ENV PHP_UPLOAD_LIMIT=1G
 
 # Install dependencies to image
 RUN apt-get update ; \
