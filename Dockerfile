@@ -57,6 +57,7 @@ RUN git clone https://github.com/matiasdelellis/pdlib-min-test-suite.git \
 FROM nextcloud:fpm
 
 ENV MEMORY_LIMIT=2G
+ENV CRON_USER=www-data
 
 # Install dependencies to image
 RUN apt-get update ; \
@@ -108,6 +109,8 @@ RUN mkdir -p \
 ;
 
 COPY supervisord.conf /
+
+RUN echo user=${CRON_USER} >> /supervisord.conf
 
 # Pre generate NextCloud Thumbnails. Source: https://www.c-rieger.de/preview-generator-previews-jumping-up-as-popcorn/
 RUN echo '0 * * * * php -f /var/www/html/occ preview:pre-generate' >> /var/spool/cron/crontabs/www-data
