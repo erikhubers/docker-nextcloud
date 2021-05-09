@@ -65,6 +65,10 @@ RUN apt-get update ; \
     apt-get install -y libopenblas-base nano supervisor
 
 RUN apt-get install -y libbz2-dev libmagickcore-6.q16-6-extra
+
+# Install ffmpeg for video preview generation
+RUN apt-get install -y ffmpeg
+
 RUN docker-php-ext-install bz2
 
 # Install dlib and PDlib to image
